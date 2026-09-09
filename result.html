@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BMI Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    {% if bmi %}
+        <h2>Hello {{ name }}!</h2>
+        <h3>Your BMI is: {{ bmi }}</h3>
+        <h3>Category: {{ category }}</h3>
+    {% endif %}
+
+    {% if show_analysis %}
+        <h2>Analysis for {{ name }}</h2>
+        <p>First BMI: {{ first_bmi }} | Latest: {{ latest_bmi }} | Avg: {{ average_bmi }}</p>
+        <p>Trend: <b style="color: {% if trend == 'Increasing' %}red{% elif trend == 'Decreasing' %}green{% else %}blue{% endif %}">{{ trend }}</b> (Diff: {{ difference }})</p>
+
+        <h3>Overall BMI Trend Graph</h3>
+        <canvas id="bmiChart" width="400" height="200"></canvas>
+
+        <script>
+            const ctx = document.getElementById('bmiChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {{ dates | tojson }},
+                    datasets: [{
+                        label: 'BMI Value',
+                        data: {{ bmi_values | tojson }},
+                        borderColor: '#4a6cf7',
+                        backgroundColor: 'rgba(74, 108, 247, 0.2)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: false, title: { display: true, text: 'BMI' } },
+                        x: { title: { display: true, text: 'Date' } }
+                    }
+                }
+            });
+        </script>
+
+        <br>
+        <h3>History Table</h3>
+        <table border="1" style="width:100%">
+            <tr><th>Date</th><th>BMI</th></tr>
+            {% for r in records %}
+            <tr><td>{{ r["date"] }}</td><td>{{ r["bmi"] }}</td></tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if show_history %}
+        <h2>All BMI History</h2>
+        <table border="1"><tr><th>Name</th><th>BMI</th><th>Date</th></tr>
+        {% for record in history %}
+        <tr><td>{{ record["name"] }}</td><td>{{ record["bmi"] }}</td><td>{{ record["date"] }}</td></tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+
+    <br><br>
+    <a href="{{ url_for('index') }}"><button>Back to Calculator</button></a>
+    <br><br>
+    <form action="{{ url_for('analyze') }}" method="get">
+        <input type="text" name="name" placeholder="Enter name to see graph" required>
+        <button type="submit">Show My Graph</button>
+    </form>
+</div>
+</body>
+</html>

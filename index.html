@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BMI Calculator</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>BMI Calculator</h1>
+
+        <!-- BMI Calculation Form -->
+
+        <form action="{{ url_for('calculate') }}" method="POST">
+
+            <label>Your Name:</label>
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter name"
+                required
+            >
+
+            <br><br>
+
+            <label>Weight (kg):</label>
+
+            <input
+                type="number"
+                name="weight"
+                step="0.1"
+                placeholder="Enter weight"
+                required
+            >
+
+            <br><br>
+
+            <label>Height (m):</label>
+
+            <input
+                type="number"
+                name="height"
+                step="0.01"
+                placeholder="Enter height"
+                required
+            >
+
+            <br><br>
+
+            <button type="submit">
+                Calculate BMI
+            </button>
+
+        </form>
+
+
+        <br>
+
+
+        <!-- View History -->
+
+        <form action="{{ url_for('history') }}" method="GET">
+
+            <button type="submit">
+                View History
+            </button>
+
+        </form>
+
+
+        <hr>
+
+
+        <!-- Analyze Trends -->
+
+        <h3>Analyze BMI Trends</h3>
+
+        <form action="{{ url_for('analyze') }}" method="POST">
+
+            <label>Enter Name to Analyze:</label>
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter name"
+                required
+            >
+
+            <button type="submit">
+                Analyze Trends
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>
